@@ -1,5 +1,4 @@
-import { Component, Prop, h } from '@stencil/core';
-import { format } from '../../utils/utils';
+import { Component, Prop, h, Method } from '@stencil/core';
 
 @Component({
   tag: 'my-component',
@@ -7,26 +6,21 @@ import { format } from '../../utils/utils';
   shadow: true,
 })
 export class MyComponent {
-  /**
-   * The first name
-   */
-  @Prop() first: string;
-
-  /**
-   * The middle name
-   */
-  @Prop() middle: string;
-
-  /**
-   * The last name
-   */
-  @Prop() last: string;
-
-  private getText(): string {
-    return format(this.first, this.middle, this.last);
-  }
+  #myOtherComponent: HTMLMyOtherComponentElement;
 
   render() {
-    return <div>Hello, World! I'm {this.getText()}</div>;
+    return (
+      <div>
+        Hello, World! I'm a Stencil component.
+        <div>
+          I'm made up of another component, see below.
+          <my-other-component ref={(element) => this.#myOtherComponent = element as HTMLMyOtherComponentElement}></my-other-component>
+        </div>
+      </div>);
+  }
+
+  @Method()
+  async foo(): Promise<void> {
+    await this.#myOtherComponent.foo();
   }
 }
